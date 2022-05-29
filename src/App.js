@@ -5,21 +5,37 @@ import './table.css'
 const fetch = require('cross-fetch')
 
 function App() {
-    const [data, setData] = useState('');
+    const [searchData, setSearchData] = useState('');
+    const [buildData, setBuildData] = useState('');
     useEffect(() => {
-        fetch('DisplayFile.txt').then(response => response.json()).then((data) => setData(data))
+        fetch('SearchFile.txt').then(response => response.json()).then(readData => setSearchData(readData))
+        fetch('BuildFile.txt').then(response => response.json()).then(readData => setBuildData(readData))
     }, [])
     return ( 
     <div> 
+        <h2>Search Data</h2>
         <table>
             <tbody>
-                {Object.keys(data).map(element => (
-                    typeof data[element] === 'object'?
-                    (<tr><td className='heading'>{element}</td>{data[element].map(value => (
+                {Object.keys(searchData).map(element => ( 
+                    typeof searchData[element] === 'object'?
+                    (<tr><td className='heading'>{element}</td>{searchData[element].map(value => (
                     (<td key={JSON.stringify(value)}>{value}</td>)
                     ))}</tr>)
                     :(<tr><td className='heading'>{element}</td>
-                    <td>{data[element]}</td></tr>)
+                    <td>{searchData[element].split(' ')}</td></tr>)
+                ))}
+            </tbody>
+        </table>
+        <h2>Build Data</h2>
+        <table>
+            <tbody>
+                {Object.keys(buildData).map(element => ( 
+                    typeof buildData[element] === 'object'?
+                    (<tr><td className='heading'>{element}</td>{buildData[element].map(value => (
+                    (<td key={JSON.stringify(value)}>{value}</td>)
+                    ))}</tr>)
+                    :(<tr><td className='heading'>{element}</td>
+                    <td>{buildData[element].split(' ')}</td></tr>)
                 ))}
             </tbody>
         </table>

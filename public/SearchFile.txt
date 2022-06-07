@@ -1,1 +1,0 @@
-{"IOPS":"4597","Average_Working_Set":[["34MB"," 35MB"],["41MB"," 44MB"]],"total_run_Time":"34329.6ms","search_thread_count":"10","QPS":"291","Latency50%":"12981us","Latency90%":"18911us","Latency95%":"20887us","Latency99%":"25453us","Latency99.9%":"40372us","Ios50%":"18","Ios95%":"22","Ios99%":"25","Ios99.9%":"26","recall@top5":"0.99694"}

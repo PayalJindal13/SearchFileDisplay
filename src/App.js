@@ -1,72 +1,60 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import './table.css'
 const fetch = require('cross-fetch')
 
 function App() {
-    const [searchData, setSearchData] = useState('');
-    const [buildData, setBuildData] = useState('');
-    const [searchMaxLength, setSearchMaxLength] = useState('');
-    const columns = Object.keys(searchData);
+    const [files, setFiles] = useState([])
+    const [searchData, setSearchData] = useState({});
     useEffect(() => {
-        fetch('SearchFile.txt').then(response => response.json()).then(readData => setSearchData(readData))
-        fetch('BuildFile.txt').then(response => response.json()).then(readData => setBuildData(readData))
+        fetch('FileNames.txt').then(response => response.text()).then(filenames => {
+            setFiles(filenames.split('\n').filter(filename => filename))
+        })
     }, [])
 
     useEffect(() => {
-        setSearchMaxLength(Math.max(columns.reduce((max, column) => {
-            max = searchData[column].length > max? searchData[column].length:max;
-            return max
-        },0)))
-    },[searchData])
-    return ( 
-    <div> 
-        <h2>Search Data</h2>
-        <table>
-            <thead>
-                <tr>
-                {Object.keys(searchData).map(heading => (
-                    <td className='heading'>{heading}</td>
-                ))}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                {Object.keys(searchData).map(element =>(
-                     typeof searchData[element] === 'object'?
-                     <td>{searchData[element].map(value => 
-                             (<tr className='insideRow'><td className='insideRow'>{value[0]}</td> <td className='insideRow'>{value[1]}</td></tr>))}</td>
-                     :(<td>{searchData[element]}</td>) 
-                ))}
-                </tr>
-            </tbody>
-        </table>
-        <h2>Build Data</h2>
-        <table>
-            <thead>
-            <tr>
-                {Object.keys(buildData).map(heading => (
-                    <td className='heading'>{heading}</td>
-                ))}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                {Object.keys(buildData).map(element => 
-                     (<td>{buildData[element]}</td>) 
-                )}
-                </tr>
-                {/* {Object.keys(buildData).map(element => ( 
-                    typeof buildData[element] === 'object'?
-                    (<tr><td className='heading'>{element}</td>{buildData[element].map(value => (
-                    (<td key={JSON.stringify(value)}>{value}</td>)
-                    ))}</tr>)
-                    :(<tr><td className='heading'>{element}</td>
-                    <td>{buildData[element]}</td></tr>)
-                ))} */}
-            </tbody>
-        </table>
+        Promise.all(files.map(file => {
+            return fetch(file).then(response => response.json())
+        })).then(filesData => {
+            const newSearchData = filesData.reduce((newSearchData, eachFileData, index) => {
+                newSearchData[files[index]] = eachFileData
+                return newSearchData
+            }, {})
+            setSearchData(newSearchData)
+        })
+
+    }, [files])
+
+    return (
+        <div>
+            <h2>Search Data</h2>
+            <table>
+                <thead>
+                    {searchData && <tr>
+                        <td></td>
+                        {Object.keys(searchData).length && Object.keys(searchData[Object.keys(searchData)[0]]).map(heading => (
+                            <td className='heading'>{heading}</td>
+                        ))}
+                    </tr>}
+
+                </thead>
+                <tbody>
+                    {Object.keys(searchData).length && Object.keys(searchData).map(file => (
+                        <tr>
+                            <td className='rowHeading'>{`${file.replace('search.txt', '')}`}</td>
+                            {Object.values(searchData[file]).map(property =>
+                                property === 'Average_Working_Set' ?
+                                    <td>
+                                        <tr className='insideRow'>
+                                            <td className='dataInArray'>{property[0]}  {property[1]}</td>
+                                        </tr>
+                                    </td>
+                                    : (<td>{property}</td>)
+                            )}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>)
 }
 export default App;

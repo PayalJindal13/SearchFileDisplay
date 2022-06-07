@@ -1,0 +1,1 @@
+{"IOPS":"9893","Average_Working_Set":[["49MB"," 49MB"]],"total_run_Time":"967.552ms","search_thread_count":"5","QPS":"","Latency50%":"0us","Latency90%":"0us","Latency95%":"0us","Latency99%":"0us","Latency99.9%":"0us","recall@top5":"0"}

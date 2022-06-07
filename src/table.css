@@ -4,19 +4,19 @@ table{
     border-spacing: 10px;
     table-layout: fixed;
     empty-cells: hide;
+    font-size: 13.5px;
 }
 tr, td {
     border: 1px solid black;
-    padding: 15px;
-}
-.heading{
-    font-weight: bold;
-    text-transform: capitalize;
-}
-tbody tr:nth-child(odd) {
-    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
 }
 
-.insideRow{
+.insideRow, .dataInArray{
     border-style: none;
+}
+.rowHeading,.heading{
+    font-weight: bold;
+    background-color: rgb(204,204,204);
+    text-transform: capitalize;
 }
